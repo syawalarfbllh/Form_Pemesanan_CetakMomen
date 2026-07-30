@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pesan Cetak Foto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF6EE;
+    --paper-deep: #F1EAD9;
+    --ink: #2B2621;
+    --ink-soft: #6E665B;
+    --brass: #B8863C;
+    --brass-deep: #96692A;
+    --sage: #4F7856;
+    --sage-bg: #EAF1E9;
+    --rust: #A9422E;
+    --rust-bg: #FBEAE6;
+    --line: #DED2B8;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 15% 10%, rgba(184,134,60,0.08), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(79,120,86,0.06), transparent 45%),
+      var(--paper);
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 460px;
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 14px;
+    color: var(--brass-deep);
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: '';
+    height: 1px;
+    width: 28px;
+    background: var(--line);
+  }
+
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 1.15;
+    text-align: center;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .sub {
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+
+  .ticket {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    box-shadow: 0 20px 40px -20px rgba(43,38,33,0.25);
+    overflow: hidden;
+  }
+
+  /* photo-corner accents */
+  .ticket::before, .ticket::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    z-index: 2;
+  }
+  .ticket::before {
+    left: 0;
+    border-width: 26px 26px 0 0;
+    border-color: var(--brass) transparent transparent transparent;
+    opacity: 0.9;
+  }
+  .ticket::after {
+    right: 0;
+    border-width: 0 26px 26px 0;
+    border-color: transparent var(--sage) transparent transparent;
+    opacity: 0.85;
+  }
+
+  .ticket-body {
+    padding: 34px 28px 26px;
+  }
+
+  .field {
+    margin-bottom: 18px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+    margin-bottom: 7px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    appearance: none;
+  }
+
+  .field select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236E665B'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 18px;
+    padding-right: 38px;
+  }
+
+  .field input:focus, .field select:focus {
+    border-color: var(--brass);
+    background: #fff;
+  }
+
+  .field input:focus-visible, .field select:focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 1px;
+  }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .field.error input, .field.error select {
+    border-color: var(--rust);
+    background: var(--rust-bg);
+  }
+  .field .error-msg {
+    display: none;
+    font-size: 12.5px;
+    color: var(--rust);
+    margin-top: 6px;
+  }
+  .field.error .error-msg { display: block; }
+
+  .tear {
+    position: relative;
+    height: 0;
+    border-top: 1.5px dashed var(--line);
+    margin: 4px 0 24px;
+  }
+  .tear::before, .tear::after {
+    content: '';
+    position: absolute;
+    top: -8px;
+    width: 16px;
+    height: 16px;
+    background: var(--paper);
+    border-radius: 50%;
+  }
+  .tear::before { left: -34px; }
+  .tear::after { right: -34px; }
+
+  button.submit {
+    width: 100%;
+    padding: 15px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  button.submit:hover { background: var(--brass-deep); }
+  button.submit:active { transform: scale(0.99); }
+  button.submit:disabled { opacity: 0.7; cursor: not-allowed; }
+  button.submit:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+
+  .spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(250,246,238,0.35);
+    border-top-color: var(--paper);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  button.submit.loading .spinner { display: inline-block; }
+  button.submit.loading .btn-label { opacity: 0.85; }
+
+  .foot-note {
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin-top: 18px;
+    line-height: 1.5;
+  }
+
+  /* success state */
+  .result {
+    display: none;
+    padding: 40px 28px 34px;
+    text-align: center;
+  }
+  .result.show { display: block; }
+  .ticket-body.hide { display: none; }
+
+  .check {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    background: var(--sage-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .check svg { width: 26px; height: 26px; }
+
+  .result h2 {
+    font-family: 'Fraunces', serif;
+    font-size: 23px;
+    font-weight: 600;
+    margin: 0 0 10px;
+  }
+  .result p {
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin: 0 0 26px;
+  }
+  .result a.folder-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--brass);
+    color: #fff;
+    text-decoration: none;
+    padding: 13px 24px;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 600;
+    transition: background 0.15s ease;
+  }
+  .result a.folder-btn:hover { background: var(--brass-deep); }
+
+  .result a.wa-btn {
+    background: var(--sage);
+  }
+  .result a.wa-btn:hover {
+    background: #3d5f43;
+  }
+
+  .result a.folder-link-secondary {
+    display: block;
+    margin-top: 14px;
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .result a.folder-link-secondary:hover {
+    color: var(--brass-deep);
+    border-bottom-color: var(--brass-deep);
+  }
+
+  .result .again {
+    display: block;
+    margin-top: 16px;
+    color: var(--ink-soft);
+    font-size: 13px;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* error banner (anti-stuck) */
+  .banner {
+    display: none;
+    background: var(--rust-bg);
+    color: var(--rust);
+    border: 1px solid #E5B9AC;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13.5px;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .banner.show { display: block; }
+
+  @media (max-width: 380px) {
+    .row2 { grid-template-columns: 1fr; }
+    h1 { font-size: 27px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="eyebrow">Cetak Momen</div>
+  <h1>Pesan Cetak Foto</h1>
+  <p class="sub">Isi data pesanan kamu, folder upload foto langsung dibuatkan otomatis.</p>
+
+  <div class="ticket">
+    <div class="ticket-body" id="ticketBody">
+
+      <div class="banner" id="errorBanner"></div>
+
+      <form id="orderForm" novalidate>
+
+        <div class="field" id="field-nama">
+          <label for="nama">Nama Lengkap</label>
+          <input type="text" id="nama" name="nama" placeholder="cth. Budi Santoso" autocomplete="name">
+          <div class="error-msg">Nama wajib diisi.</div>
+        </div>
+
+        <div class="field" id="field-noWA">
+          <label for="noWA">Nomor WhatsApp</label>
+          <input type="tel" id="noWA" name="noWA" placeholder="cth. 081234567890" autocomplete="tel">
+          <div class="error-msg">Nomor WhatsApp wajib diisi.</div>
+        </div>
+
+        <div class="field" id="field-noPesanan">
+          <label for="noPesanan">Nomor Pesanan Shopee</label>
+          <input type="text" id="noPesanan" name="noPesanan" placeholder="cth. SHP12345678">
+          <div class="error-msg">Nomor pesanan wajib diisi.</div>
+        </div>
+
+        <div class="row2">
+          <div class="field" id="field-kategori">
+            <label for="kategori">Kategori</label>
+            <select id="kategori" name="kategori">
+              <option value="">Pilih</option>
+              <option value="Wisuda">Wisuda</option>
+              <option value="Ulang Tahun">Ulang Tahun</option>
+              <option value="Pernikahan">Pernikahan</option>
+              <option value="Keluarga">Keluarga</option>
+              <option value="Produk/UMKM">Produk / UMKM</option>
+              <option value="Lainnya">Lainnya</option>
+            </select>
+            <div class="error-msg">Wajib dipilih.</div>
+          </div>
+
+          <div class="field" id="field-frame">
+            <label for="frame">Frame</label>
+            <select id="frame" name="frame">
+              <option value="">Pilih</option>
+              <option value="4R">4R</option>
+              <option value="5R">5R</option>
+              <option value="10R">10R</option>
+              <option value="A5">A5</option>
+              <option value="A4">A4</option>
+              <option value="Tanpa Frame">Tanpa Frame</option>
+            </select>
+            <div class="error-msg">Wajib dipilih.</div>
+          </div>
+        </div>
+
+        <div class="field" id="field-jumlah">
+          <label for="jumlah">Jumlah (pcs)</label>
+          <input type="number" id="jumlah" name="jumlah" min="1" placeholder="cth. 5">
+          <div class="error-msg">Jumlah wajib diisi.</div>
+        </div>
+
+        <div class="tear"></div>
+
+        <button type="submit" class="submit" id="submitBtn">
+          <span class="spinner"></span>
+          <span class="btn-label">Buat Folder & Kirim Pesanan</span>
+        </button>
+      </form>
+    </div>
+
+    <div class="result" id="resultBox">
+      <div class="check">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4F7856" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h2>Pesanan berhasil dibuat</h2>
+      <p>Satu langkah terakhir: chat admin dulu di WhatsApp ya, biar kami bisa kirim link folder dan update pesanan langsung ke nomor kamu.</p>
+      <a href="#" target="_blank" class="folder-btn wa-btn" id="chatAdminLink">
+        <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.9-4.44 9.9-9.9S17.5 2 12.04 2zm0 18.06h-.01a8.2 8.2 0 01-4.18-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.4c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.17 8.17 0 012.41 5.82c0 4.54-3.7 8.25-8.24 8.25zm4.52-6.16c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.44.06-.67.31s-.88.86-.88 2.1.9 2.44 1.03 2.6c.12.17 1.77 2.7 4.29 3.79.6.26 1.07.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.29z"/></svg>
+        Chat Admin di WhatsApp
+      </a>
+      <a href="#" target="_blank" class="folder-link-secondary" id="folderLink">Atau buka folder foto langsung &rarr;</a>
+      <button class="again" id="resetBtn">Buat pesanan lain</button>
+    </div>
+  </div>
+
+  <p class="foot-note">Setelah submit, kamu juga akan menerima konfirmasi<br>lewat WhatsApp beserta link folder.</p>
+</div>
+
+<script>
+  // ============================================
+  // KONFIGURASI - GANTI DENGAN WEBHOOK URL N8N KAMU
+  // ============================================
+  const WEBHOOK_URL = 'GANTI_DENGAN_WEBHOOK_URL_N8N';
+  const ADMIN_WA_NUMBER = 'GANTI_DENGAN_NOMOR_WA_DEVICE_FONNTE'; // format: 628xxxxxxxxxx, tanpa + atau 0
+
+  const form = document.getElementById('orderForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const errorBanner = document.getElementById('errorBanner');
+  const ticketBody = document.getElementById('ticketBody');
+  const resultBox = document.getElementById('resultBox');
+  const folderLink = document.getElementById('folderLink');
+  const chatAdminLink = document.getElementById('chatAdminLink');
+  const resetBtn = document.getElementById('resetBtn');
+
+  const fields = ['nama', 'noWA', 'noPesanan', 'kategori', 'frame', 'jumlah'];
+
+  function clearErrors() {
+    fields.forEach(f => document.getElementById('field-' + f).classList.remove('error'));
+    errorBanner.classList.remove('show');
+    errorBanner.textContent = '';
+  }
+
+  function showFieldError(f) {
+    document.getElementById('field-' + f).classList.add('error');
+  }
+
+  function showBanner(msg) {
+    errorBanner.textContent = msg;
+    errorBanner.classList.add('show');
+  }
+
+  function validate(data) {
+    let valid = true;
+    fields.forEach(f => {
+      const val = (data[f] || '').toString().trim();
+      if (!val) {
+        showFieldError(f);
+        valid = false;
+      }
+    });
+    if (data.jumlah && Number(data.jumlah) < 1) {
+      showFieldError('jumlah');
+      valid = false;
+    }
+    return valid;
+  }
+
+  function setLoading(isLoading) {
+    submitBtn.disabled = isLoading;
+    submitBtn.classList.toggle('loading', isLoading);
+    submitBtn.querySelector('.btn-label').textContent = isLoading
+      ? 'Memproses pesanan...'
+      : 'Buat Folder & Kirim Pesanan';
+  }
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    clearErrors();
+
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    if (!validate(data)) {
+      showBanner('Beberapa kolom belum diisi. Yuk lengkapi dulu sebelum lanjut.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 20000); // proteksi anti-stuck: timeout 20 detik
+
+      const res = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+        signal: controller.signal
+      });
+
+      clearTimeout(timeout);
+
+      if (!res.ok) {
+        throw new Error('server-error');
+      }
+
+      const result = await res.json();
+
+      if (result.success) {
+        folderLink.href = result.folderUrl || '#';
+
+        const waMessage = `Halo, saya ${data.nama} baru saja pesan cetak foto dengan no. pesanan ${data.noPesanan}. Mohon info folder upload fotonya ya 🙏`;
+        chatAdminLink.href = `https://wa.me/${ADMIN_WA_NUMBER}?text=${encodeURIComponent(waMessage)}`;
+
+        ticketBody.classList.add('hide');
+        resultBox.classList.add('show');
+      } else {
+        showBanner(result.error || 'Terjadi kendala saat memproses pesanan. Silakan coba lagi.');
+      }
+
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        showBanner('Koneksi terlalu lama merespons. Cek koneksi internet kamu dan coba lagi.');
+      } else {
+        showBanner('Koneksi terputus atau server sedang bermasalah. Silakan coba beberapa saat lagi.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  resetBtn.addEventListener('click', function () {
+    form.reset();
+    clearErrors();
+    resultBox.classList.remove('show');
+    ticketBody.classList.remove('hide');
+  });
+</script>
+
+</body>
+</html>
