@@ -81,6 +81,40 @@
     line-height: 1.5;
   }
 
+  .video-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 12px 28px -18px rgba(43,38,33,0.22);
+  }
+
+  .video-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+    padding: 0 4px;
+  }
+
+  .video-card video {
+    width: 100%;
+    display: block;
+    border-radius: 8px;
+    background: #000;
+    max-height: 320px;
+  }
+
+  .video-error {
+    display: none;
+    color: var(--rust);
+    font-size: 12.5px;
+    line-height: 1.5;
+    padding: 8px 4px 0;
+  }
+  .video-error.show { display: block; }
+
   .ticket {
     position: relative;
     background: #fff;
@@ -349,6 +383,15 @@
   <h1>Pesan Cetak Foto</h1>
   <p class="sub">Isi data pesanan kamu, folder upload foto langsung dibuatkan otomatis.</p>
 
+  <div class="video-card">
+    <div class="video-label">📹 Cara Cek Nomor Pesanan Shopee</div>
+    <video id="tutorialVideo" controls preload="metadata" playsinline>
+      <source src="./tutorial.mp4" type="video/mp4">
+      Browser kamu tidak mendukung pemutaran video.
+    </video>
+    <div class="video-error" id="videoError" role="alert">Video tutorial tidak dapat dimuat. Pastikan file tutorial.mp4 berada di folder yang sama dengan halaman ini.</div>
+  </div>
+
   <div class="ticket">
     <div class="ticket-body" id="ticketBody">
 
@@ -364,7 +407,7 @@
 
         <div class="field" id="field-noWA">
           <label for="noWA">Nomor WhatsApp</label>
-          <input type="tel" id="noWA" name="noWA" placeholder="cth formatnya. 6281234567890" autocomplete="tel">
+          <input type="tel" id="noWA" name="noWA" placeholder="cth. 081234567890" autocomplete="tel">
           <div class="error-msg">Nomor WhatsApp wajib diisi.</div>
         </div>
 
@@ -439,8 +482,8 @@
   // ============================================
   // KONFIGURASI - GANTI DENGAN WEBHOOK URL N8N KAMU
   // ============================================
-  const WEBHOOK_URL = 'https://n8n.tail595368.ts.net/webhook/wa-incoming';
-  const ADMIN_WA_NUMBER = '6289673954505'; // format: 628xxxxxxxxxx, tanpa + atau 0
+  const WEBHOOK_URL = 'https://n8n.tail595368.ts.net/webhook/order-submit';
+  const ADMIN_WA_NUMBER = '6281977943170'; // format: 628xxxxxxxxxx, tanpa + atau 0
 
   const form = document.getElementById('orderForm');
   const submitBtn = document.getElementById('submitBtn');
@@ -450,6 +493,12 @@
   const folderLink = document.getElementById('folderLink');
   const chatAdminLink = document.getElementById('chatAdminLink');
   const resetBtn = document.getElementById('resetBtn');
+  const tutorialVideo = document.getElementById('tutorialVideo');
+  const videoError = document.getElementById('videoError');
+
+  tutorialVideo.addEventListener('error', function () {
+    videoError.classList.add('show');
+  });
 
   const fields = ['nama', 'noWA', 'noPesanan', 'kategori', 'frame', 'jumlah'];
 
