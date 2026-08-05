@@ -106,15 +106,6 @@
     max-height: 320px;
   }
 
-  .video-error {
-    display: none;
-    color: var(--rust);
-    font-size: 12.5px;
-    line-height: 1.5;
-    padding: 8px 4px 0;
-  }
-  .video-error.show { display: block; }
-
   .ticket {
     position: relative;
     background: #fff;
@@ -385,11 +376,10 @@
 
   <div class="video-card">
     <div class="video-label">📹 Cara Cek Nomor Pesanan Shopee</div>
-    <video id="tutorialVideo" controls preload="metadata" playsinline>
-      <source src="./tutorial.mp4" type="video/mp4">
+    <video controls preload="metadata" playsinline>
+      <source src="tutorial-cara-cek-nomor-pesanan.mp4" type="video/mp4">
       Browser kamu tidak mendukung pemutaran video.
     </video>
-    <div class="video-error" id="videoError" role="alert">Video tutorial tidak dapat dimuat. Pastikan file tutorial.mp4 berada di folder yang sama dengan halaman ini.</div>
   </div>
 
   <div class="ticket">
@@ -407,13 +397,13 @@
 
         <div class="field" id="field-noWA">
           <label for="noWA">Nomor WhatsApp</label>
-          <input type="tel" id="noWA" name="noWA" placeholder="cth. 6281234567890" autocomplete="tel">
+          <input type="tel" id="noWA" name="noWA" placeholder="cth. 081234567890" autocomplete="tel">
           <div class="error-msg">Nomor WhatsApp wajib diisi.</div>
         </div>
 
         <div class="field" id="field-noPesanan">
           <label for="noPesanan">Nomor Pesanan Shopee</label>
-          <input type="text" id="noPesanan" name="noPesanan" placeholder="cth. 260626JK84GK3">
+          <input type="text" id="noPesanan" name="noPesanan" placeholder="cth. SHP12345678">
           <div class="error-msg">Nomor pesanan wajib diisi.</div>
         </div>
 
@@ -466,7 +456,7 @@
       </div>
       <h2>Pesanan berhasil dibuat</h2>
       <p>Satu langkah terakhir: chat admin dulu di WhatsApp ya, biar kami bisa kirim link folder dan update pesanan langsung ke nomor kamu.</p>
-      <a href="#" target="_blank" class="folder-btn wa-btn" id="chatAdminLink">
+      <a href="#" class="folder-btn wa-btn" id="chatAdminLink" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor" width="17" height="17"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 004.79 1.22h.01c5.46 0 9.9-4.44 9.9-9.9S17.5 2 12.04 2zm0 18.06h-.01a8.2 8.2 0 01-4.18-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 01-1.26-4.4c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.42a8.17 8.17 0 012.41 5.82c0 4.54-3.7 8.25-8.24 8.25zm4.52-6.16c-.25-.12-1.47-.72-1.7-.81-.23-.08-.4-.12-.56.13-.17.25-.65.81-.8.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.16-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.42-.56-.43h-.48c-.17 0-.44.06-.67.31s-.88.86-.88 2.1.9 2.44 1.03 2.6c.12.17 1.77 2.7 4.29 3.79.6.26 1.07.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.1-.23-.16-.48-.29z"/></svg>
         Chat Admin di WhatsApp
       </a>
@@ -482,8 +472,8 @@
   // ============================================
   // KONFIGURASI - GANTI DENGAN WEBHOOK URL N8N KAMU
   // ============================================
-  const WEBHOOK_URL = 'https://n8n-ycuqer2jdob8.jkt6.sumopod.my.id/webhook/order-submit';
-  const ADMIN_WA_NUMBER = '6281977943170'; // format: 628xxxxxxxxxx, tanpa + atau 0
+  const WEBHOOK_URL = 'GANTI_DENGAN_WEBHOOK_URL_N8N';
+  const ADMIN_WA_NUMBER = 'GANTI_DENGAN_NOMOR_WA_DEVICE_FONNTE'; // format: 628xxxxxxxxxx, tanpa + atau 0
 
   const form = document.getElementById('orderForm');
   const submitBtn = document.getElementById('submitBtn');
@@ -493,12 +483,6 @@
   const folderLink = document.getElementById('folderLink');
   const chatAdminLink = document.getElementById('chatAdminLink');
   const resetBtn = document.getElementById('resetBtn');
-  const tutorialVideo = document.getElementById('tutorialVideo');
-  const videoError = document.getElementById('videoError');
-
-  tutorialVideo.addEventListener('error', function () {
-    videoError.classList.add('show');
-  });
 
   const fields = ['nama', 'noWA', 'noPesanan', 'kategori', 'frame', 'jumlah'];
 
@@ -577,7 +561,7 @@
         folderLink.href = result.folderUrl || '#';
 
         const waMessage = `Halo, saya ${data.nama} baru saja pesan cetak foto dengan no. pesanan ${data.noPesanan}. Mohon info folder upload fotonya ya 🙏`;
-        chatAdminLink.href = `https://wa.me/${ADMIN_WA_NUMBER}?text=${encodeURIComponent(waMessage)}`;
+        chatAdminLink.href = `https://api.whatsapp.com/send?phone=${ADMIN_WA_NUMBER}&text=${encodeURIComponent(waMessage)}`;
 
         ticketBody.classList.add('hide');
         resultBox.classList.add('show');
